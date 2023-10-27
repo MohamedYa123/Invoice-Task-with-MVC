@@ -1,0 +1,143 @@
+﻿@model Invoice_Task.AddInvoiceModel
+@{
+}
+<style>
+    td {
+        border-style: solid;
+        border-width: 3px;
+    }
+</style>
+<div class="text-center">Invoice Add / Edit</div>
+<br />
+<div>
+    
+    <form method="post">
+        <input asp-for="idrand" hidden />
+        <input asp-for="ActionTypeP" hidden/>
+        <input name="InvoicetoEdit" asp-for="InvoicetoEdit" hidden />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group row">
+
+            <label asp-for="Code" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Code" class="form-control" />
+            </div>
+            <span asp-validation-for="Code" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="form-group row">
+            <label asp-for="Date" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <input asp-for="Date" class="form-control" />
+            </div>
+            <span asp-validation-for="Date" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="form-group row">
+            <label asp-for="Customer" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <select asp-for="Customer" class="form-select">
+                    @{
+                        foreach (var customer in Model.Customers)
+                        {
+                            if (customer.Id == Model.Customer)
+                            {
+                                <option value="@customer.Id" selected>@customer.Name</option>
+                            }
+                            else
+                            {
+                                <option value="@customer.Id">@customer.Name</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <span asp-validation-for="Customer" class="text-danger"></span>
+        </div>
+        <br />
+        <div class="form-group" style="padding:25px;border-width:1px;border-style:solid; border-radius:6px;">
+            <div class="text-center">Add Item</div>
+            <br />
+            <div class="form-group row">
+                <label asp-for="Item" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <select asp-for="Item" class="form-select">
+                        @{
+                            int i = 0;
+                            foreach (var item in Model.Items)
+                            {
+                                <option value="@i">@item.Name</option>
+                                i++;
+                            }
+                        }
+                    </select>
+                </div>
+                <span asp-validation-for="Item" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group row">
+                <label asp-for="Quantity" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-6">
+                    <input asp-for="Quantity" class="form-control" />
+                </div>
+                <div class="col-sm-4">
+                    <input class="btn btn-warning" name="submitbutton"  type="submit" value="Add Item" />
+                </div>
+                <span asp-validation-for="Item" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="table table-striped">
+            <table id="ItemsTable" class="table">
+                <thead>
+                    <tr style="background-color:darkblue;color:white;">
+                        <td>Item</td>
+                        <td>Price</td>
+                        <td>Quantity</td>
+                        <td>Total</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var item in Model.Addeditems)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Price</td>
+                                <td>@item.Quantity</td>
+                                <td>@item.Total</td>
+                            </tr>
+                        }
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                            </td>
+                            <td>Total</td>
+                            <td>@Model.Total</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="form-group row">
+            <div class="col-sm-5"></div>
+            <div class="col-sm-6">
+                <input class="btn  btn-success" name="@Model.ActionTypeP invoice" type="submit" value="@Model.ActionTypeP Invoice" />
+            </div>
+            <div class="col-sm-1"></div>
+        </div>
+    </form>
+
+    <script>
+        function updateTable() {
+            $.ajax({
+                url: "/home/AddInvoice",
+                type: "GET",
+                success: function (data) {
+                    $("#ItemsTable").html(data);
+                }
+            });
+        }
+    </script>
+</div>
