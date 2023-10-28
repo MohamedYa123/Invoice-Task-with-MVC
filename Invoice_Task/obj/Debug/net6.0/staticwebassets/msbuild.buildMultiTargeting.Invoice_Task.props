@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Invoice_Task.props" />
-</Project>
