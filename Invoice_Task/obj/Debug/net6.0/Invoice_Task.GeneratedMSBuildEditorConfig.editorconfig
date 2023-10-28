@@ -20,24 +20,8 @@ build_property._RazorSourceGeneratorDebug =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBZGRJbnZvaWNlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[G:/projects/Invoice_Task/Invoice_Task/Views/Home/AddInvoice2.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBZGRJbnZvaWNlMi5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[G:/projects/Invoice_Task/Invoice_Task/Views/Home/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZWxldGUuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [G:/projects/Invoice_Task/Invoice_Task/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[G:/projects/Invoice_Task/Invoice_Task/Views/Home/Index2.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleDIuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[G:/projects/Invoice_Task/Invoice_Task/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [G:/projects/Invoice_Task/Invoice_Task/Views/Shared/Error.cshtml]

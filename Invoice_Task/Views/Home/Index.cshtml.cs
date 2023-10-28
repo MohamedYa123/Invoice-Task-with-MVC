@@ -7,7 +7,10 @@ namespace Invoice_Task
 {
     public class Index 
     {
-      
+        #region Methods
+        /// <summary>
+        /// used to load invoice from the database to fill in the list
+        /// </summary>
         void loadInvoices()
         {
             if (Pagenum > LastPagenum)
@@ -31,7 +34,6 @@ namespace Invoice_Task
                 invoiceViews.Add(invoiceView);
             }
         }
-
         public void OnGet(int PageNum)
         {
             var db = new dbManager();
@@ -49,6 +51,9 @@ namespace Invoice_Task
             loadInvoices();
            // return Page();
         }
+        #endregion
+        #region Properites
+        // Invoice to view list
         [BindProperty]
         public List<InvoiceView> invoiceViews { get; set; } = new List<InvoiceView>();
         public int Pagenum { get; set; } = 1;
@@ -86,7 +91,8 @@ namespace Invoice_Task
             }
         }
         public int NumPerpage { get; set; } = 10;
-       
+        #endregion
+
     }
 }
 

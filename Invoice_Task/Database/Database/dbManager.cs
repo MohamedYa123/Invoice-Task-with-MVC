@@ -15,7 +15,6 @@ namespace Invoice_Task.Database
         {
             
             options.UseSqlServer(@"Server=MOHAMEDYASSER\SQLEXPRESS;Database=InvoiceDB;TrustServerCertificate=True;Trusted_Connection=True");
-            //options.UseSqlServer(@"Data Source=SQL8005.site4now.net;Initial Catalog=db_a96cf2_medo;User Id=db_a96cf2_medo_admin;Password=Doublemedo123;TrustServerCertificate=True");//website
         }
         public override int SaveChanges()
         {

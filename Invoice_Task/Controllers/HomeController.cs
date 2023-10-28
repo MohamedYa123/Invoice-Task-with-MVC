@@ -1,7 +1,7 @@
 ﻿using Invoice_Task.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using Invoice_Task.Views.Home;
+//using Invoice_Task.Views.Home;
 namespace Invoice_Task.Controllers
 {
     public class HomeController : Controller
@@ -15,35 +15,28 @@ namespace Invoice_Task.Controllers
 
         public IActionResult Index(int PageNum)
         {
-            if (PageNum == 0)
-            {
-               // PageNum = 1;
-            }
+            
             if (PageNum <=0)
             {
                 return Redirect("/home/index?PageNum=" + 1);
             }
             var model = new Invoice_Task.Index();
             model.OnGet(PageNum);
+            if (PageNum != model.Pagenum)
+            {
+                return Redirect("/home/index?PageNum=" + model.Pagenum);
+            }
             return View(model);
         }
-
-        public IActionResult Privacy(string id)
-        {
-           return View();
-        }
-        public IActionResult Delete()
-        {
-            return RedirectToAction("Index");
-        }
+        #region AddInvoice
         [HttpGet]
         public IActionResult AddInvoice(int Id, string ActionType, int pagenum)
         {
             var model = new Invoice_Task.AddInvoiceModel();
             model.OnGet(Id, ActionType, pagenum);
-            if (model.redirect != "")
+            if (model.Redirect != "")
             {
-                return Redirect(model.redirect);
+                return Redirect(model.Redirect);
             }
             return View(model);
         }
@@ -51,12 +44,13 @@ namespace Invoice_Task.Controllers
         public IActionResult AddInvoice(string submitbutton, AddInvoiceModel model)
         {
             model.OnPost(submitbutton);
-            if (model.redirect != "")
+            if (model.Redirect != "")
             {
-                return Redirect(model.redirect);
+                return Redirect(model.Redirect);
             }
             return View(model);
         }
+        #endregion
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

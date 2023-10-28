@@ -5,78 +5,28 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.ComponentModel.DataAnnotations;
 
 namespace Invoice_Task
 {
+    public class Validations : PageModel
+    {
+
+        public string Code { get; set; } = "";
+        
+    }
     public class AddInvoiceModel 
     {
-        public void OnGet(int Id,string ActionType,int pagenum)
-        {
-            if (ActionType == "Delete")
-            {
-                //  ModelState.AddModelError("model.Username", "Invalid Username");
-                var db = new dbManager();
-                var Invoice=db.Invoices.FirstOrDefault(i=>i.Id == Id);
-                if (Invoice != null)
-                {
-                    db.Invoices.Remove(Invoice);
-                    db.SaveChanges();
-                    //return Redirect("index?pagenum="+pagenum);
-                    redirect = "index?pagenum=" + pagenum;
-                }
-            }
-            else if(ActionType =="Edit")
-            {
-                ActionTypeP = ActionType;
-                InvoicetoEdit = Id;
-                var db = new dbManager();
-                var Invoice = db.Invoices.Include(i=>i.Customer).First(i => i.Id == InvoicetoEdit);
-                var itemlinks = db.Itemlinks.Include(i=>i.item).Where(i => i.Invoice == Invoice).ToList();
-                foreach(var a in itemlinks)
-                {
-                    itemlinktemp itemlinktemp=new itemlinktemp();
-                    Item item = db.Items.First(i => i.Id == a.item.Id);
-                    itemlinktemp.Item = item;
-                    itemlinktemp.Quantity=a.quantity;
-                    itemlinktemp.Tempid = idrand;
-                    db.itemlinktemps.Add(itemlinktemp);
-                }
-                Customer = Invoice.Customer.Id;
-                Code = Invoice.Code;
-                db.SaveChanges();
-                load();
-            }
-            else 
-            {
-                ActionTypeP =  "Add";
-            }
-         //   return Page();
-        }
-        void load()
-        {
-            
-            var db = new dbManager();
-            Items =db.Items.ToList();
-            //
-            Customers=db.Customers.ToList();
-            Addeditems.Clear();
-            var itemstemplink = db.itemlinktemps.Include(i=>i.Item).Where(i=>i.Tempid== idrand).ToList();
-            foreach(var itemtemp in itemstemplink)
-            {
-                ItemView itemview = new ItemView();
-                itemview.Id=itemtemp.Item.Id;
-                itemview.Quantity = itemtemp.Quantity;
-                itemview.Price = itemtemp.Item.price;
-                itemview.Name = itemtemp.Item.Name;
-                Addeditems.Add(itemview);
-            }
-            //
-        }
+        #region Validation section
+        [BindProperty]
+        public Validations validations { get; set; }=new Validations();
+        #endregion
         public AddInvoiceModel()
         {
             load();
            
         }
+        #region Binded properties
         [BindProperty]
         public int InvoicetoEdit { get; set; }
         [BindProperty]
@@ -104,6 +54,8 @@ namespace Invoice_Task
         public double Total2 { get; set; }
         [BindProperty]
         public List<ItemView> Addeditems { get; set; } = new List<ItemView>();
+        #endregion
+        #region readonly properties
         public double Total
         {
             get
@@ -116,7 +68,76 @@ namespace Invoice_Task
                 return sum;
             }
         }
-        public string redirect { get; set; } = "";
+        private string redirect="";
+        public string Redirect { get { return redirect; } }
+        #endregion
+        #region Methods
+        /// <summary>
+        /// used to fill customers , items and Addeditems list
+        /// call each time on post and get requests
+        /// </summary>
+        void load()
+        {
+
+            var db = new dbManager();
+            Items = db.Items.ToList();
+            //
+            Customers = db.Customers.ToList();
+            Addeditems.Clear();
+            var itemstemplink = db.itemlinktemps.Include(i => i.Item).Where(i => i.Tempid == idrand).ToList();
+            foreach (var itemtemp in itemstemplink)
+            {
+                ItemView itemview = new ItemView();
+                itemview.Id = itemtemp.Item.Id;
+                itemview.Quantity = itemtemp.Quantity;
+                itemview.Price = itemtemp.Item.price;
+                itemview.Name = itemtemp.Item.Name;
+                Addeditems.Add(itemview);
+            }
+            //
+        }
+        public void OnGet(int Id, string ActionType, int pagenum)
+        {
+            if (ActionType == "Delete")
+            {
+                //  
+                var db = new dbManager();
+                var Invoice = db.Invoices.FirstOrDefault(i => i.Id == Id);
+                if (Invoice != null)
+                {
+                    db.Invoices.Remove(Invoice);
+                    db.SaveChanges();
+                    //return Redirect("index?pagenum="+pagenum);
+                    redirect = "index?pagenum=" + pagenum;
+                }
+            }
+            else if (ActionType == "Edit")
+            {
+                ActionTypeP = ActionType;
+                InvoicetoEdit = Id;
+                var db = new dbManager();
+                var Invoice = db.Invoices.Include(i => i.Customer).First(i => i.Id == InvoicetoEdit);
+                var itemlinks = db.Itemlinks.Include(i => i.item).Where(i => i.Invoice == Invoice).ToList();
+                foreach (var a in itemlinks)
+                {
+                    itemlinktemp itemlinktemp = new itemlinktemp();
+                    Item item = db.Items.First(i => i.Id == a.item.Id);
+                    itemlinktemp.Item = item;
+                    itemlinktemp.Quantity = a.quantity;
+                    itemlinktemp.Tempid = idrand;
+                    db.itemlinktemps.Add(itemlinktemp);
+                }
+                Customer = Invoice.Customer.Id;
+                Code = Invoice.Code;
+                db.SaveChanges();
+                load();
+            }
+            else
+            {
+                ActionTypeP = "Add";
+            }
+            //   return Page();
+        }
         public void OnPost(string submitbutton)
         {
           
@@ -139,13 +160,21 @@ namespace Invoice_Task
                 Addeditems.Add(itemview);
                 //return Page();
             }
-            else if(ActionTypeP!="Edit")
+            else if(ActionTypeP=="Add")
             {
                 var db=new dbManager();
-              
-                var temps=db.itemlinktemps.Where(i=>i.Id == idrand).ToList();
+                var inv = db.Invoices.FirstOrDefault(i => i.Code == Code);
+                if (inv != null)
+                {
+                    validations.Code = "An Invoice with the same code already exists ! ";
+                    redirect = "";
+                    return;
+                }
+                //get rid of the garbage
+                var temps=db.itemlinktemps.Where(i=>i.Tempid == idrand).ToList();
                 db.itemlinktemps.RemoveRange(temps);
                 db.SaveChanges();
+                //
                 var customer=db.Customers.First(i=>i.Id == Customer);
                 Invoice invoice = new Invoice();
                 invoice.Customer = customer;
@@ -169,12 +198,15 @@ namespace Invoice_Task
                 redirect = "index";
             //    return Redirect("index");
             }
-            else
+            else if (ActionTypeP == "Edit")
             {
+                
                 var db = new dbManager();
-                var temps = db.itemlinktemps.Where(i => i.Id == idrand).ToList();
+                //get rid of the garbage
+                var temps = db.itemlinktemps.Where(i => i.Tempid == idrand).ToList();
                 db.itemlinktemps.RemoveRange(temps);
                 db.SaveChanges();
+                //
                 var invoice = db.Invoices.Include(i=>i.Customer).First(i => i.Id==InvoicetoEdit);
                 var customer = db.Customers.First(i => i.Id == Customer);
                 invoice.Customer = customer;
@@ -200,5 +232,6 @@ namespace Invoice_Task
                 //return Redirect("index");
             }
         }
+        #endregion
     }
 }
